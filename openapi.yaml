@@ -1,7 +1,7 @@
 openapi: 3.1.1
 
 info:
-  title: OpenAPI Express
+  title: OpenAPI Express Platzi
   version: 1.0.0
   description: API First
 
@@ -20,3 +20,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HelloResponse"
+  /:
+    get:
+      summary: Hello Jose
+      responses:
+        "200":
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HelloResponse"
+
+components:
+  schemas:
+    HelloResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    HelloRootResponse:
+      type: object
+      properties:
+        message:
+          type: string
