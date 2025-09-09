@@ -22,6 +22,8 @@ app.use(
   })
 );
 
+app.use(express.json());
+
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     message: err.message,
@@ -35,6 +37,17 @@ app.get("/hello", (req, res) => {
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello Jose" });
+});
+
+app.post("/users", (req, res) => {
+  const { name, age, email } = req.body;
+  const newUser = {
+    id: Date.now().toString(),
+    name,
+    age,
+    email,
+  };
+  res.status(201).json(newUser);
 });
 
 app.listen(PORT, () => {
