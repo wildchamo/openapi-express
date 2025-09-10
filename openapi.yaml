@@ -141,7 +141,7 @@ paths:
                   type: string
                   format: email
       responses:
-        "201":
+        "200":
           description: Usuario actualizado exitosamente
           content:
             application/json:
@@ -151,4 +151,17 @@ paths:
                   id:
                     type: integer
                   name:
+                    type: string
+                  age:
+                    type: integer
+                  email:
+                    type: string
+        "404":
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
                     type: string
