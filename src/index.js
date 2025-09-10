@@ -27,10 +27,10 @@ app.use(express.json());
 // Simple in-memory users store to support GET/POST /users/:id
 // Keys are integers (as required by the OpenAPI spec for path param),
 // and example users are provided for testing.
-const users = new Map([
-  [1, { id: 1, name: "Alice" }],
-  [2, { id: 2, name: "Bob" }],
-]);
+const users = [
+  { id: 1, name: "Alice", age: 25, email: "alice@example.com" },
+  { id: 2, name: "Bob", age: 30, email: "bob@example.com" },
+];
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
@@ -55,30 +55,30 @@ app.post("/users", (req, res) => {
     age,
     email,
   };
+  users.push(newUser);
   res.status(201).json(newUser);
 });
 
 // GET /users/:id - obtener un usuario por id
 app.get("/users/:id", (req, res) => {
   const { id } = req.params;
-  const user = users.get(id);
+  const user = users.find((user) => user.id === parseInt(id));
   if (!user) {
     return res.status(404).json({ message: "Usuario no encontrado" });
   }
-  // Respuesta debe cumplir con el esquema: { id: integer, name: string }
-  return res.json({ id: user.id, name: user.name });
+  return res.json(user);
 });
 
 // POST /users/:id - actualizar un usuario existente
 app.post("/users/:id", (req, res) => {
-  const { id } = req.params;
-  if (!users.has(id)) {
+  const id = parseInt(req.params.id, 10);
+  const idx = users.findIndex((u) => u.id === id);
+  if (idx === -1) {
     return res.status(404).json({ message: "Usuario no encontrado" });
   }
   const { name, age, email } = req.body;
   const updatedUser = { id, name, age, email };
-  users.set(id, updatedUser);
-  // Respuesta debe cumplir con el esquema: { id: integer, name: string, age: integer, email: string }
+  users[idx] = updatedUser;
   return res.json(updatedUser);
 });
 
