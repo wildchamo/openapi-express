@@ -60,7 +60,7 @@ app.post("/users", (req, res) => {
 
 // GET /users/:id - obtener un usuario por id
 app.get("/users/:id", (req, res) => {
-  const id = parseInt(req.params.id, 10);
+  const { id } = req.params;
   const user = users.get(id);
   if (!user) {
     return res.status(404).json({ message: "Usuario no encontrado" });
@@ -71,7 +71,7 @@ app.get("/users/:id", (req, res) => {
 
 // POST /users/:id - actualizar un usuario existente
 app.post("/users/:id", (req, res) => {
-  const id = parseInt(req.params.id, 10);
+  const { id } = req.params;
   if (!users.has(id)) {
     return res.status(404).json({ message: "Usuario no encontrado" });
   }
