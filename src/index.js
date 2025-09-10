@@ -32,12 +32,31 @@ const users = [
   { id: 2, name: "Bob", age: 30, email: "bob@example.com" },
 ];
 
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    message: err.message,
-    errors: err.errors,
-  });
-});
+// In-memory products store to support /products endpoints
+let products = [
+  {
+    id: 1,
+    name: "Smartphone",
+    description: "Mid-range phone",
+    price: 299.99,
+    category: "electronics",
+    tags: ["mobile", "gadgets"],
+    inStock: true,
+    specifications: { color: "black", storage: "128GB" },
+    ratings: [{ score: 5, comment: "Great value" }],
+  },
+  {
+    id: 2,
+    name: "Novel Book",
+    description: "Bestseller novel",
+    price: 19.99,
+    category: "books",
+    tags: ["fiction"],
+    inStock: true,
+    specifications: { author: "Doe" },
+    ratings: [{ score: 4, comment: "Good read" }],
+  },
+];
 
 app.get("/hello", (req, res) => {
   res.json({ message: "Hello World" });
@@ -82,6 +101,84 @@ app.post("/users/:id", (req, res) => {
   return res.json(updatedUser);
 });
 
+// POST /products - crear un nuevo producto
+app.post("/products", (req, res) => {
+  const {
+    name,
+    description,
+    price,
+    category,
+    tags,
+    inStock,
+    specifications,
+    ratings,
+  } = req.body;
+  const newProduct = {
+    id: products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1,
+    name,
+    description,
+    price,
+    category,
+    tags,
+    inStock,
+    specifications,
+    ratings,
+  };
+  products.push(newProduct);
+  return res.status(201).json(newProduct);
+});
+
+// GET /products/:id - obtener un producto por id
+app.get("/products/:id", (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const product = products.find((p) => p.id === id);
+  if (!product) {
+    return res.status(404).json({ message: "Producto no encontrado" });
+  }
+  return res.json(product);
+});
+
+// POST /products/:id - actualizar un producto existente
+app.post("/products/:id", (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const idx = products.findIndex((p) => p.id === id);
+  if (idx === -1) {
+    return res.status(404).json({ message: "Producto no encontrado" });
+  }
+  const {
+    name,
+    description,
+    price,
+    category,
+    tags,
+    inStock,
+    specifications,
+    ratings,
+  } = req.body;
+  const updated = {
+    id,
+    name,
+    description,
+    price,
+    category,
+    tags,
+    inStock,
+    specifications,
+    ratings,
+  };
+  products[idx] = updated;
+  return res.json(updated);
+});
+
+// Error handler should be after all routes to catch validation and route errors
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    message: err.message,
+    errors: err.errors,
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT} 🚀 http://localhost:${PORT}`);
 });
+
