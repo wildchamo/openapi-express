@@ -56,6 +56,46 @@ let products = [
     specifications: { author: "Doe" },
     ratings: [{ score: 4, comment: "Good read" }],
   },
+  {
+    id: 3,
+    name: "Wireless Headphones",
+    description: "Over-ear Bluetooth 5.3 headphones with ANC",
+    price: 129.99,
+    category: "electronics",
+    tags: ["audio", "bluetooth"],
+    inStock: true,
+    specifications: { brand: "SoundMax", color: "black", battery: "40h" },
+    ratings: [{ score: 5, comment: "Excelente sonido" }],
+  },
+  {
+    id: 4,
+    name: "JavaScript Patterns",
+    description: "A practical guide to modern JS design patterns",
+    price: 39.95,
+    category: "books",
+    tags: ["programming", "javascript"],
+    inStock: true,
+    specifications: { author: "Jane Doe", pages: "420", language: "en" },
+    ratings: [{ score: 4, comment: "Muy útil para proyectos grandes" }],
+  },
+  {
+    id: 5,
+    name: "Organic Granola",
+    description: "Gluten-free granola with almonds and honey",
+    price: 8.5,
+    category: "food",
+    tags: ["breakfast", "snack"],
+    inStock: true,
+    specifications: {
+      weight: "500g",
+      ingredients: "oats, almonds, honey",
+      allergens: "nuts",
+    },
+    ratings: [
+      { score: 5, comment: "Deliciosa y saludable" },
+      { score: 4, comment: "Un poco cara" },
+    ],
+  },
 ];
 
 app.get("/hello", (req, res) => {
@@ -181,4 +221,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT} 🚀 http://localhost:${PORT}`);
 });
-
