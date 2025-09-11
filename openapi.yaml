@@ -6,8 +6,10 @@ info:
   description: API First
 
 servers:
-  - url: http://localhost:4000
-    description: Local server
+  - url: http://localhost:4000/v1
+    description: Versión 1 de la API
+  - url: http://localhost:4000/v2
+    description: Versión 2 de la API
 
 components:
   schemas:
