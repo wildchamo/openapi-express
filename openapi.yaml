@@ -1,9 +1,13 @@
 openapi: 3.1.1
 
 info:
-  title: OpenAPI Express Platzi
-  version: 1.0.0
-  description: API First
+  title: Fake OpenAPI Express Platzi
+  version: 1.2.0
+  description: |-
+    This is a sample FakeAPI Store Server based on the OpenAPI 3.X specification. You can find out more about Swagger at https://swagger.io. In the third iteration of the pet store, we've switched to the design first approach. You can now help us improve the API whether it's by making changes to the definition itself or to the code. That way, with time, we can improve the API in general, and expose some of the new features in OAS3. JOSE
+
+    Some useful links:
+    - [FakeAPI Store](https://fakeapi.platzi.com/)
 
 servers:
   - url: http://localhost:4000/v1
@@ -11,7 +15,29 @@ servers:
   - url: http://localhost:4000/v2
     description: Versión 2 de la API
 
+externalDocs:
+  description: Find out more about FakeAPI Store
+  url: https://fakeapi.platzi.com/
+tags:
+  - name: Users
+    description: Operaciones relacionadas con usuarios
+
+  - name: Products
+    description: Operaciones relacionadas con productos
+
+  - name: System
+    description: Operaciones relacionadas con el sistema
+    externalDocs:
+      description: Find out more about FakeAPI Store
+      url: https://fakeapi.platzi.com/
+
 components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token
   schemas:
     HelloResponse:
       type: object
@@ -36,29 +62,37 @@ components:
           type: string
           minLength: 2
           maxLength: 100
+          example: "Macbook pro m3"
         description:
           type: string
           maxLength: 500
+          example: "Macbook pro m3"
         price:
           type: number
           minimum: 0
           multipleOf: 0.01
+          example: 1000.00
         category:
           type: string
           enum: [electronics, books, clothes, food]
+          example: electronics
         tags:
           type: array
           items:
             type: string
           minItems: 1
+          example: ["macbook", "m4"]
         inStock:
           type: boolean
+
+          example: true
         specifications:
           type: object
           additionalProperties:
             type: string
         ratings:
           type: array
+          example: [{ score: 5, comment: "Excelente producto" }]
           items:
             required:
               - score
@@ -71,9 +105,21 @@ components:
               comment:
                 type: string
                 maxLength: 500
+      securitySchemes:
+        JWT:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+          description: JWT token
+
+security:
+  - JWT: []
+
 paths:
   /:
     get:
+      tags:
+        - System
       summary: Hello Jose
       responses:
         "200":
@@ -84,6 +130,8 @@ paths:
                 $ref: "#/components/schemas/HelloResponse"
   /hello:
     get:
+      tags:
+        - System
       summary: Hello World
       responses:
         "200":
@@ -94,6 +142,8 @@ paths:
                 $ref: "#/components/schemas/HelloRootResponse"
   /users:
     post:
+      tags:
+        - Users
       summary: crear un nuevo usuario
       requestBody:
         required: true
@@ -132,6 +182,8 @@ paths:
                     type: string
   /users/{id}:
     get:
+      tags:
+        - Users
       summary: obtener un usuario por el id
       parameters:
         - in: path
@@ -162,6 +214,8 @@ paths:
                     type: string
 
     post:
+      tags:
+        - Users
       summary: actualizar un nuevo usuario existente
       parameters:
         - in: path
@@ -215,8 +269,39 @@ paths:
                   message:
                     type: string
 
+  /auth/login:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+
+        responses:
+          "200":
+            description: Login exitoso
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+
   /products:
     post:
+      tags:
+        - Products
       summary: crear un nuevo producto
       requestBody:
         required: true
@@ -234,6 +319,8 @@ paths:
 
   /products/{id}:
     get:
+      tags:
+        - Products
       summary: obtener un producto por id
       parameters:
         - in: path
@@ -258,6 +345,8 @@ paths:
                   message:
                     type: string
     post:
+      tags:
+        - Products
       summary: actualizar un producto existente
       parameters:
         - in: path
